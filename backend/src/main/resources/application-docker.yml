@@ -4,9 +4,17 @@ spring:
       on-profile: docker
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/cloudpilot}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    url: ${CLOUD_DB_URL:${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/cloudpilot}}
+    username: ${CLOUD_DB_USER:${SPRING_DATASOURCE_USERNAME:postgres}}
+    password: ${CLOUD_DB_PASSWORD:${SPRING_DATASOURCE_PASSWORD:postgres}}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      max-lifetime: 60000
+      connection-timeout: 20000
+      keepalive-time: 15000
+      connection-test-query: SELECT 1
 
   data:
     redis:
@@ -15,4 +23,4 @@ spring:
 
 cloudpilot:
   ai-service:
-    base-url: ${AI_SERVICE_URL:http://ai-service:8000}
+    base-url: ${CLOUDPILOT_AI_SERVICE_BASE_URL:${AI_SERVICE_URL:http://ai-service:8000}}
