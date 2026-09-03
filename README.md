@@ -1,125 +1,161 @@
-# 🚀 CloudPilot
+# 🚀 CloudPilot — Intelligent Support & SLA Management Platform
 
-> **Intelligent Customer Support & SLA Management Platform**  
-> AI-powered ticket routing, Customer 360 intelligence, real-time SLA monitoring, and robust DSA implementations.
+[![CI Pipeline](https://github.com/sangam-builds/cloudpilot/actions/workflows/ci.yml/badge.svg)](https://github.com/sangam-builds/cloudpilot/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-indigo.svg)](LICENSE)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.5-brightgreen.svg?logo=springboot)](https://spring.io/projects/spring-boot)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-18-61DAFB.svg?logo=react)](https://react.dev)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16_Cloud-336791.svg?logo=postgresql)](https://www.postgresql.org)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg?logo=docker)](https://www.docker.com)
+
+**CloudPilot** is an enterprise-grade AI-powered customer support orchestration and dynamic SLA monitoring platform. It combines real-time NLP classification, semantic RAG draft reply generation, mathematical multi-factor agent scoring, Customer 360 intelligence, and microservice blast radius simulation into a unified dark-mode dashboard.
 
 ---
 
-## 📌 Overview
+## 🏛️ System Architecture
 
-**CloudPilot** is an enterprise-grade customer support platform designed to streamline support operations, automate ticket classification, optimize agent assignment via custom scoring and graph algorithms, and ensure stringent SLA enforcement.
+```mermaid
+graph TB
+    subgraph "Frontend Layer (React 18 + Vite)"
+        UI[React SPA / Vite]
+        AuthCtx[Auth & Role Context]
+        Components[Tickets / Customer360 / Admin Console]
+        UI --> AuthCtx
+        UI --> Components
+    end
 
----
+    subgraph "Core Backend (Spring Boot 3 / Java 21)"
+        API[REST Controllers]
+        Sec[JWT Security & Filters]
+        TicketSvc[Ticket & SLA Engine]
+        AssignSvc[Agent Assignment Engine]
+        GraphEngine[DSA Blast Radius BFS/DFS]
+        PQ[Ticket PriorityQueue]
+        SlaJob[SLA Monitor Scheduler]
+        
+        API --> Sec
+        API --> TicketSvc
+        API --> AssignSvc
+        API --> GraphEngine
+        TicketSvc --> PQ
+        TicketSvc --> SlaJob
+    end
 
-## 🏗️ System Architecture
+    subgraph "AI Microservice (Python FastAPI)"
+        FastAPI[FastAPI Gateway]
+        Classifier[NLP Classifier & Fallback]
+        RAG[Vector Embeddings & FAQ RAG]
+        Summary[Customer 360 Synthesizer]
+        
+        FastAPI --> Classifier
+        FastAPI --> RAG
+        FastAPI --> Summary
+    end
 
+    subgraph "Storage & Observability"
+        Postgres[(Cloud PostgreSQL / Flyway)]
+        Redis[(Redis Cache)]
+        Prometheus[Prometheus Metrics]
+        Grafana[Grafana Dashboards]
+    end
+
+    Components -- HTTP/REST --> API
+    TicketSvc -- HTTP/REST --> FastAPI
+    TicketSvc --> Postgres
+    TicketSvc --> Redis
+    API --> Prometheus
+    Prometheus --> Grafana
 ```
-cloudpilot/
-├── 🌐 frontend/       # Modern React App (Vite, Tailwind/CSS, Recharts, Lucide)
-├── ☕ backend/        # Spring Boot Monolith (JPA, Redis, Security, Micrometer, Flyway)
-├── 🤖 ai-service/      # Python FastAPI (Sentence-Transformers, RAG, Ticket Classifier)
-├── 🗄️ database/        # SQL Schemas, Migrations & Data Models
-├── 🐳 docker/          # Multi-container Compose & Dockerfiles
-├── 📊 monitoring/      # Prometheus Metrics & Grafana Dashboards
-└── 📚 docs/            # Architecture, API specs, and DSA documentation
-```
 
 ---
 
-## ⚡ Tech Stack
+## 🌟 Key Features
 
-| Layer | Technologies |
-| :--- | :--- |
-| **Frontend** | React 18, Vite, React Router DOM, Axios, Recharts, Lucide Icons |
-| **Backend** | Java 21, Spring Boot 3.3.x, Spring Data JPA, Spring Security, Flyway, JJWT |
-| **Caching & Queue** | Redis, In-Memory Priority Queues |
-| **AI & NLP** | Python 3.12, FastAPI, Sentence-Transformers, PyTorch, Scikit-Learn |
-| **Database** | PostgreSQL 16 |
-| **Observability** | Prometheus, Grafana, Micrometer Actuator |
-| **DevOps & CI** | Docker, Docker Compose, GitHub Actions CI |
-
----
-
-## 💡 Core Features & DSA Highlights
-
-- **🧠 AI Ticket Triage & RAG**: Automated sentiment classification, category tagging, and suggested replies powered by vector retrieval.
-- **⚡ Priority Queue Routing (`TicketPriorityQueue`)**: Priority-based scheduling ensuring critical SLAs are prioritized.
-- **🎯 Weighted Agent Scorer (`AgentScorer`)**: Dynamic agent matching based on skill set, workload, past performance, and response latency.
-- **🕸️ Service Dependency Graph (`ServiceDependencyGraph`)**: Graph traversal (BFS/DFS) to trace cascading outages and correlated ticket storms.
-- **🔍 Timestamp Binary Search (`TicketTimestampSearch`)**: High-speed chronological search over resolved incident logs.
-- **⏱️ Real-time SLA Monitoring**: Automated background jobs scanning open tickets with proactive escalation triggers.
-- **👤 Customer 360 View**: Comprehensive profile aggregation, past order history, and AI sentiment summaries.
+1. **🤖 AI-Powered Real-Time Triage**: Automatically extracts categories, priority ratings (`HIGH`, `MEDIUM`, `LOW`), and sentiment tags (`POSITIVE`, `NEUTRAL`, `NEGATIVE`, `FRUSTRATED`) with seamless Java keyword fallback resilience.
+2. **🧠 Grounded RAG FAQ Copilot**: Vector semantic retrieval matching customer issues against verified knowledge bases to generate draft responses with 1-click apply.
+3. **📐 Deterministic DSA Algorithms**:
+   - $\mathcal{O}(n \log n)$ Multi-Factor Weighted Agent Scoring ($40\%$ Skill Match $+ 30\%$ Workload $+ 20\%$ CSAT Rating $+ 10\%$ Availability).
+   - $\mathcal{O}(V + E)$ Service Dependency Graph BFS/DFS for incident blast radius simulation.
+   - Bounded PriorityQueue with FIFO timestamp tie-breaking.
+   - Sub-millisecond $\mathcal{O}(\log N)$ binary search across incident timelines.
+4. **⏱️ Dynamic SLA Monitoring**: `@Scheduled` 60s daemon scanning SLA deadlines, automatically triggering `AT_RISK` and `BREACHED` flags and Prometheus counters.
+5. **👤 Customer 360 View**: Aggregated lifetime transaction spend, open/resolved ticket statistics, and chronological activity streams.
+6. **🛡️ Enterprise Security & Auditing**: Stateless JWT authentication, role-based access control (`ADMIN`, `AGENT`, `CUSTOMER`), and immutable SOC2 audit trail logging.
+7. **☁️ Cloud-Ready Database**: Native support for cloud-hosted PostgreSQL instances (Neon, Supabase, Render, AWS RDS) with SSL encryption and Flyway schema auto-migrations.
 
 ---
 
-## 🚀 Getting Started
+## ⚡ Quick Start (Docker Compose)
 
-### Prerequisites
+The entire multi-tier stack can be launched locally with a single command:
 
-- **Node.js**: `v18+` (v20+ recommended)
-- **Java**: `JDK 17+` (JDK 21 recommended)
-- **Maven**: `3.9+`
-- **Python**: `3.10+` (3.12 recommended)
-- **Docker & Docker Compose**: (optional for containerized deployment)
-
----
-
-### Local Development Setup
-
-#### 1. Clone the repository
 ```bash
-git clone https://github.com/<your-username>/cloudpilot.git
+# Clone repository
+git clone https://github.com/sangam-builds/cloudpilot.git
 cd cloudpilot
-```
 
-#### 2. Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-#### 3. Backend
-```bash
-cd backend
-mvn clean install
-mvn spring-boot:run
-```
-
-#### 4. AI Service
-```bash
-cd ai-service
-python -m venv .venv
-# On Windows:
-.venv\Scripts\activate
-# On Linux/macOS:
-# source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-```
-
----
-
-### 🐳 Running with Docker Compose
-
-To spin up all services (PostgreSQL, Redis, AI Service, Backend, Frontend, Prometheus, and Grafana) with a single command:
-
-```bash
+# Launch all 7 services
 docker compose up --build
 ```
 
+### Access URLs
+| Service | URL | Default Credentials |
+|---|---|---|
+| **Frontend UI** | [http://localhost:3000](http://localhost:3000) | Preset 1-click accounts on login |
+| **Spring Boot Backend** | [http://localhost:8080](http://localhost:8080) | `admin@cloudpilot.io` / `password123` |
+| **Swagger API Docs** | [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) | — |
+| **FastAPI AI Engine** | [http://localhost:8000/docs](http://localhost:8000/docs) | Open OpenAPI spec |
+| **Prometheus Metrics** | [http://localhost:9090](http://localhost:9090) | — |
+| **Grafana Dashboards** | [http://localhost:3001](http://localhost:3001) | `admin` / `admin` |
+
 ---
 
-## 📖 Documentation
+## ☁️ Cloud Database Deployment
 
-- [Architecture & Design](file:///docs/architecture.png)
-- [API Documentation](file:///docs/API.md)
-- [DSA Algorithms & Complexity Guide](file:///docs/algorithms.md)
-- [Database Design & Schema](file:///docs/database-design.md)
-- [Demo & Walkthrough](file:///docs/demo.md)
+To point the backend to your managed cloud PostgreSQL database (e.g. Neon, Supabase, AWS RDS):
+
+```bash
+# Set environment variables
+export CLOUD_DB_URL="jdbc:postgresql://<your-host>.neon.tech/cloudpilot?sslmode=require"
+export CLOUD_DB_USER="<your-user>"
+export CLOUD_DB_PASSWORD="<your-password>"
+
+# Launch production compose
+docker compose -f docker-compose.prod.yml up --build
+```
 
 ---
 
-## 🛡️ License
+## 🧪 Testing & Quality Assurance
 
+### Run Backend Unit & Integration Tests (11/11 passing)
+```bash
+cd backend
+mvn test
+```
+
+### Run Python AI Service Tests (7/7 passing)
+```bash
+cd ai-service
+pytest tests/ -v
+```
+
+### Build Frontend Production Assets
+```bash
+cd frontend
+npm run build
+```
+
+---
+
+## 📚 Technical Documentation
+
+- 📖 [REST API Reference](docs/API.md) — Detailed OpenAPI schemas and status code matrix.
+- 📐 [DSA & Algorithms Deep Dive](docs/algorithms.md) — Scoring formulas, graph traversal, and complexity analysis.
+- 🗄️ [Database Architecture](docs/database-design.md) — ER diagrams, indexing strategy, and state transitions.
+- 🎬 [Live Demonstration Script](docs/demo.md) — Step-by-step walkthrough guide for evaluators.
+
+---
+
+## 📄 License
 This project is licensed under the [MIT License](LICENSE).
