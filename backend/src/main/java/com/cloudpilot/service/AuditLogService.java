@@ -2,22 +2,24 @@ package com.cloudpilot.service;
 
 import com.cloudpilot.model.AuditLog;
 import com.cloudpilot.repository.AuditLogRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class AuditLogService {
 
+    private static final Logger log = LoggerFactory.getLogger(AuditLogService.class);
     private final AuditLogRepository auditLogRepository;
+
+    public AuditLogService(AuditLogRepository auditLogRepository) {
+        this.auditLogRepository = auditLogRepository;
+    }
 
     @Transactional
     public AuditLog log(String actorId, String actorRole, String action, String entityType, String entityId, String details) {

@@ -1,14 +1,13 @@
 package com.cloudpilot.service;
 
 import com.cloudpilot.dto.Customer360Dto;
-import com.cloudpilot.exception.TicketNotFoundException;
 import com.cloudpilot.model.Customer;
 import com.cloudpilot.model.Order;
 import com.cloudpilot.model.Ticket;
 import com.cloudpilot.repository.CustomerRepository;
 import com.cloudpilot.repository.TicketRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,17 +15,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class CustomerService {
+
+    private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
     private final CustomerRepository customerRepository;
     private final TicketRepository ticketRepository;
     private final AiClientService aiClientService;
+
+    public CustomerService(CustomerRepository customerRepository, TicketRepository ticketRepository, AiClientService aiClientService) {
+        this.customerRepository = customerRepository;
+        this.ticketRepository = ticketRepository;
+        this.aiClientService = aiClientService;
+    }
 
     @Transactional(readOnly = true)
     public Customer getCustomerById(Long id) {
@@ -39,13 +43,6 @@ public class CustomerService {
         return customerRepository.findAll(pageable);
     }
 
-    /**
-     * Aggregates Customer 360 intelligence:
-     * - Order volume and historical lifetime spend
-     * - Open vs resolved ticket metrics
-     * - Chronological unified timeline of orders and tickets
-     * - Real-time AI sentiment & account health summary
-     */
     @Transactional(readOnly = true)
     public Customer360Dto getCustomer360(Long customerId) {
         Customer customer = getCustomerById(customerId);
@@ -65,7 +62,6 @@ public class CustomerService {
                 .filter(t -> t.getStatus() == Ticket.Status.RESOLVED || t.getStatus() == Ticket.Status.CLOSED)
                 .count();
 
-        // Build unified chronological activity timeline
         List<Customer360Dto.ActivityItemDto> activity = new ArrayList<>();
 
         for (Order order : orders) {
@@ -95,7 +91,6 @@ public class CustomerService {
             return b.getTimestamp().compareTo(a.getTimestamp());
         });
 
-        // Generate AI 360 summary
         List<String> ticketSubjects = tickets.stream().map(Ticket::getSubject).toList();
         List<String> orderSummaries = orders.stream()
                 .map(o -> "$" + o.getAmount() + " (" + o.getStatus() + ")")

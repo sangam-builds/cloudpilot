@@ -1,7 +1,8 @@
 package com.cloudpilot.service;
 
 import com.cloudpilot.dto.ClassificationDto;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
@@ -11,12 +12,10 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 import java.util.*;
 
-/**
- * HTTP client communicating with Python FastAPI AI Service with resilient Java fallback.
- */
 @Service
-@Slf4j
 public class AiClientService {
+
+    private static final Logger log = LoggerFactory.getLogger(AiClientService.class);
 
     private final RestTemplate restTemplate;
     private final String aiServiceBaseUrl;
@@ -33,9 +32,6 @@ public class AiClientService {
         this.aiServiceBaseUrl = aiServiceBaseUrl;
     }
 
-    /**
-     * Classifies ticket category, priority, and sentiment via FastAPI AI service with Java rule-based fallback.
-     */
     public ClassificationDto classify(String subject, String description) {
         String endpoint = aiServiceBaseUrl + "/classify";
         try {
@@ -58,13 +54,9 @@ public class AiClientService {
             log.warn("AI Service call to {} failed: {}. Triggering Java keyword fallback classifier.", endpoint, ex.getMessage());
         }
 
-        // Resilient Fallback: Rule-Based Classifier in Java
         return ruleBasedFallbackClassifier(subject, description);
     }
 
-    /**
-     * Generates a 1-paragraph Customer 360 AI summary.
-     */
     public String getCustomerSummary(String customerName, List<String> ticketSubjects, List<String> orderSummaries) {
         String endpoint = aiServiceBaseUrl + "/customer-summary";
         try {
@@ -90,9 +82,6 @@ public class AiClientService {
                 customerName, ticketSubjects != null ? ticketSubjects.size() : 0, orderSummaries != null ? orderSummaries.size() : 0);
     }
 
-    /**
-     * Retrieves AI-suggested draft reply using RAG.
-     */
     public String suggestReply(String subject, String description) {
         String endpoint = aiServiceBaseUrl + "/suggest-reply";
         try {
@@ -116,9 +105,6 @@ public class AiClientService {
         return "Thank you for reaching out to CloudPilot Support. We have received your inquiry and our engineering team is actively investigating. We will update you shortly.";
     }
 
-    /**
-     * Fallback classifier in pure Java using domain keyword heuristics.
-     */
     public ClassificationDto ruleBasedFallbackClassifier(String subject, String description) {
         String combined = ((subject != null ? subject : "") + " " + (description != null ? description : "")).toLowerCase();
 
