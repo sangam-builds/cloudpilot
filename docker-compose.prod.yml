@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: cloudpilot-ai-service
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_PORT=8000
+      - EMBEDDING_MODEL=all-MiniLM-L6-v2
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cloudpilot-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=${CLOUD_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${CLOUD_DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${CLOUD_DB_PASSWORD}
+      - CLOUDPILOT_AI_SERVICE_BASE_URL=http://ai-service:8000
+    depends_on:
+      - ai-service
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cloudpilot-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
