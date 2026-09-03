@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  # Relational Database (Cloud-compatible local replica)
+  # Relational Database (Local fallback if cloud DB is not configured)
   postgres:
     image: postgres:16-alpine
     container_name: cloudpilot-postgres
@@ -61,18 +59,17 @@ services:
     container_name: cloudpilot-backend
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8088:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/cloudpilot
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_URL=${CLOUD_DB_URL:-jdbc:postgresql://postgres:5432/cloudpilot}
+      - SPRING_DATASOURCE_USERNAME=${CLOUD_DB_USER:-postgres}
+      - SPRING_DATASOURCE_PASSWORD=${CLOUD_DB_PASSWORD:-password}
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - CLOUDPILOT_AI_SERVICE_BASE_URL=http://ai-service:8000
+      - JWT_SECRET=${JWT_SECRET:-404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
     depends_on:
-      postgres:
-        condition: service_healthy
       redis:
         condition: service_healthy
       ai-service:
