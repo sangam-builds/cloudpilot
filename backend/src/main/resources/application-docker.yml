@@ -24,3 +24,8 @@ spring:
 cloudpilot:
   ai-service:
     base-url: ${CLOUDPILOT_AI_SERVICE_BASE_URL:${AI_SERVICE_URL:http://ai-service:8000}}
+
+management:
+  health:
+    redis:
+      enabled: false
