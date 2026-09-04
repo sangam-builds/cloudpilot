@@ -2,6 +2,8 @@
 
 [![CI Pipeline](https://github.com/sangam-builds/cloudpilot/actions/workflows/ci.yml/badge.svg)](https://github.com/sangam-builds/cloudpilot/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-indigo.svg)](LICENSE)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sangam-builds/cloudpilot)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/sangam-builds/cloudpilot&root-directory=frontend)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.5-brightgreen.svg?logo=springboot)](https://spring.io/projects/spring-boot)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18-61DAFB.svg?logo=react)](https://react.dev)
@@ -9,6 +11,16 @@
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg?logo=docker)](https://www.docker.com)
 
 **CloudPilot** is an enterprise-grade AI-powered customer support orchestration and dynamic SLA monitoring platform. It combines real-time NLP classification, semantic RAG draft reply generation, mathematical multi-factor agent scoring, Customer 360 intelligence, and microservice blast radius simulation into a unified dark-mode dashboard.
+
+---
+
+## 🌐 1-Click Free Cloud Deployment
+
+CloudPilot is configured for 100% free multi-platform deployment on **Render**, **Vercel**, **Netlify**, **Railway**, and **Neon DB**:
+
+- 🚀 **1-Click Render Blueprint**: [Deploy to Render](https://render.com/deploy?repo=https://github.com/sangam-builds/cloudpilot) (Instantiates FastAPI AI Service, Spring Boot Engine, and React SPA with Neon DB).
+- ⚡ **Vercel / Netlify Frontend**: Point to the `frontend/` directory with `VITE_API_BASE_URL` set to your backend URL.
+- 📖 **Complete Step-by-Step Guide**: See [docs/deployment.md](docs/deployment.md) for detailed platform-by-platform instructions.
 
 ---
 

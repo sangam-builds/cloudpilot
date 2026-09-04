@@ -1,0 +1,67 @@
+# Render Blueprint Specification for CloudPilot
+# 100% Free Tier Deployment
+version: "1"
+
+services:
+  # 1. AI NLP & Triage Microservice (FastAPI + SentenceTransformers)
+  - type: web
+    name: cloudpilot-ai-service
+    runtime: docker
+    dockerContext: ./ai-service
+    dockerfilePath: ./ai-service/Dockerfile
+    plan: free
+    region: ohio
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: LLM_MODEL
+        value: gpt-4o-mini
+      - key: EMBEDDING_MODEL_NAME
+        value: all-MiniLM-L6-v2
+
+  # 2. Core Business Logic & DSA Engine (Spring Boot 3.3 / Java 21)
+  - type: web
+    name: cloudpilot-backend
+    runtime: docker
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile
+    plan: free
+    region: ohio
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_PROFILES_ACTIVE
+        value: docker
+      - key: CLOUD_DB_URL
+        value: jdbc:postgresql://ep-twilight-tooth-ax4dzdsg-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require
+      - key: CLOUD_DB_USER
+        value: neondb_owner
+      - key: CLOUD_DB_PASSWORD
+        value: npg_bvsK7ClNAhn2
+      - key: JWT_SECRET
+        value: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      - key: CLOUDPILOT_AI_SERVICE_BASE_URL
+        fromService:
+          type: web
+          name: cloudpilot-ai-service
+          property: host
+
+  # 3. Operations Command Center (React 18 + Vite SPA)
+  - type: web
+    name: cloudpilot-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: cloudpilot-backend
+          property: host
