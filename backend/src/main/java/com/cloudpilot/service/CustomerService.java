@@ -43,6 +43,7 @@ public class CustomerService {
         return customerRepository.findAll(pageable);
     }
 
+    @org.springframework.cache.annotation.Cacheable(value = "customer360", key = "#customerId", unless = "#result == null")
     @Transactional(readOnly = true)
     public Customer360Dto getCustomer360(Long customerId) {
         Customer customer = getCustomerById(customerId);

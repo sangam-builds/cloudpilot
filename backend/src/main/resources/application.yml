@@ -39,7 +39,18 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      timeout: 2000ms
+      password: ${REDIS_PASSWORD:}
+      username: ${REDIS_USERNAME:}
+      ssl:
+        enabled: ${REDIS_SSL_ENABLED:false}
+      timeout: 5000ms
+      connect-timeout: 5000ms
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000
+      cache-null-values: false
 
 cloudpilot:
   security:
@@ -65,7 +76,7 @@ management:
       enabled: true
   health:
     redis:
-      enabled: false
+      enabled: true
   metrics:
     tags:
       application: ${spring.application.name}

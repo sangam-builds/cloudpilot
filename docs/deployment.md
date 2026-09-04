@@ -43,6 +43,24 @@ CloudPilot is pre-configured to connect directly to a live serverless cloud data
 | **`CLOUD_DB_USER`** | `neondb_owner` |
 | **`CLOUD_DB_PASSWORD`**| `npg_bvsK7ClNAhn2` |
 | **`JWT_SECRET`** | `404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970` |
+| **`REDIS_HOST`** | Cloud Redis Host (e.g. from Upstash Redis or Render Redis) |
+| **`REDIS_PORT`** | Cloud Redis Port (e.g. `6379` or `32145`) |
+| **`REDIS_PASSWORD`** | Cloud Redis Password |
+| **`REDIS_SSL_ENABLED`** | `true` (if connecting with TLS/SSL) |
+
+---
+
+### ⚡ Free Cloud Redis Setup (Upstash / Render Redis)
+
+To get a 100% free cloud Redis instance in 30 seconds:
+1. Go to [Upstash.com](https://console.upstash.com/) (Free tier: 10,000 requests/day, no credit card required).
+2. Click **Create Database** $\rightarrow$ Name: `cloudpilot-redis` $\rightarrow$ Region: `us-east-1`.
+3. In the database details, copy the **Endpoint (Host)**, **Port**, and **Password**.
+4. Set in your backend environment variables:
+   - `REDIS_HOST`: `<your-endpoint>.upstash.io`
+   - `REDIS_PORT`: `<your-port>`
+   - `REDIS_PASSWORD`: `<your-password>`
+   - `REDIS_SSL_ENABLED`: `true`
 
 ---
 

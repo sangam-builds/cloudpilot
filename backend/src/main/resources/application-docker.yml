@@ -20,6 +20,12 @@ spring:
     redis:
       host: ${REDIS_HOST:redis}
       port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      username: ${REDIS_USERNAME:}
+      ssl:
+        enabled: ${REDIS_SSL_ENABLED:false}
+      timeout: 5000ms
+      connect-timeout: 5000ms
 
 cloudpilot:
   ai-service:
@@ -28,4 +34,4 @@ cloudpilot:
 management:
   health:
     redis:
-      enabled: false
+      enabled: true
