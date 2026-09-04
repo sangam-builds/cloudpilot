@@ -67,10 +67,14 @@ Render provides free Docker web services and free static sites. CloudPilot inclu
 
 ### Step 2A: Deploy Backend & AI on Render
 1. **AI Service**:
-   - New **Web Service** -> Build from Dockerfile (`ai-service/Dockerfile`).
+   - New **Web Service** -> Build from Dockerfile.
+   - **Root Directory**: `ai-service`
+   - **Dockerfile Path**: `Dockerfile` (or `./ai-service/Dockerfile`)
    - Note the deployed URL (e.g. `https://cloudpilot-ai.onrender.com`).
 2. **Backend**:
-   - New **Web Service** -> Build from Dockerfile (`backend/Dockerfile`).
+   - New **Web Service** -> Build from Dockerfile.
+   - **Root Directory**: `backend`
+   - **Dockerfile Path**: `Dockerfile` (or `./backend/Dockerfile`)
    - Add Environment Variables:
      - `SPRING_PROFILES_ACTIVE`: `docker`
      - `CLOUD_DB_URL`: `jdbc:postgresql://ep-twilight-tooth-ax4dzdsg-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require`
