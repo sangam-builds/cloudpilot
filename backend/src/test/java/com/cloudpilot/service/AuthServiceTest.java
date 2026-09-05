@@ -69,7 +69,7 @@ class AuthServiceTest {
     @Test
     void testRegister_HappyPath() {
         AuthRequestDto request = new AuthRequestDto("newuser@example.com", "password", "New User", null);
-        when(customerRepository.findByEmail("newuser@example.com")).thenReturn(Optional.empty());
+        when(customerRepository.findByEmailIgnoreCase("newuser@example.com")).thenReturn(Optional.empty());
 
         Customer savedCustomer = Customer.builder().id(99L).email("newuser@example.com").name("New User").build();
         when(customerRepository.save(any(Customer.class))).thenReturn(savedCustomer);
@@ -81,5 +81,14 @@ class AuthServiceTest {
         assertNotNull(response);
         assertEquals(99L, response.getUserId());
         assertEquals("CUSTOMER", response.getRole());
+    }
+
+    @Test
+    void testRegister_DuplicateEmailThrowsException() {
+        AuthRequestDto request = new AuthRequestDto("existing@example.com", "password", "Existing User", null);
+        Customer existing = Customer.builder().id(1L).email("existing@example.com").build();
+        when(customerRepository.findByEmailIgnoreCase("existing@example.com")).thenReturn(Optional.of(existing));
+
+        assertThrows(IllegalArgumentException.class, () -> authService.register(request));
     }
 }

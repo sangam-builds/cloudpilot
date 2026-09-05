@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { Zap, ArrowRight } from 'lucide-react';
+import { Zap, ArrowRight, User, Mail, Lock, ShieldCheck } from 'lucide-react';
 
 export const RegisterForm = () => {
   const { register } = useAuth();
@@ -9,15 +9,27 @@ export const RegisterForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
-    const res = await register(name, email, password);
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match. Please verify and try again.');
+      return;
+    }
+
+    setLoading(true);
+
+    const res = await register(name.trim(), email.trim(), password);
     if (res.success) {
       navigate('/dashboard');
     } else {
@@ -27,7 +39,7 @@ export const RegisterForm = () => {
   };
 
   return (
-    <div className="glass-panel" style={{ width: '100%', maxWidth: '440px', padding: '36px 32px' }}>
+    <div className="glass-panel" style={{ width: '100%', maxWidth: '460px', padding: '36px 32px' }}>
       <div style={{ textAlign: 'center', marginBottom: '28px' }}>
         <div style={{
           width: '48px',
@@ -44,48 +56,69 @@ export const RegisterForm = () => {
         </div>
         <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '6px' }}>Create Account</h2>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-          Register your organization for intelligent SLA management
+          Register your organization for intelligent SLA management &amp; support
         </p>
       </div>
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '16px' }}>
           <label className="form-label">Full Name / Organization</label>
-          <input
-            type="text"
-            className="form-input"
-            placeholder="e.g. Apex Dynamics Ltd."
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+          <div style={{ position: 'relative' }}>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="e.g. Apex Dynamics Ltd."
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
         </div>
 
         <div style={{ marginBottom: '16px' }}>
           <label className="form-label">Work Email</label>
-          <input
-            type="email"
-            className="form-input"
-            placeholder="support@apexdynamics.io"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <div style={{ position: 'relative' }}>
+            <input
+              type="email"
+              className="form-input"
+              placeholder="support@apexdynamics.io"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+        </div>
+
+        <div style={{ marginBottom: '16px' }}>
+          <label className="form-label">Password</label>
+          <div style={{ position: 'relative' }}>
+            <input
+              type="password"
+              className="form-input"
+              placeholder="Minimum 6 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
         </div>
 
         <div style={{ marginBottom: '20px' }}>
-          <label className="form-label">Password</label>
-          <input
-            type="password"
-            className="form-input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <label className="form-label">Confirm Password</label>
+          <div style={{ position: 'relative' }}>
+            <input
+              type="password"
+              className="form-input"
+              placeholder="Re-type your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
         </div>
 
         {error && (
-          <div style={{ padding: '10px', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid #ef4444', borderRadius: '8px', color: '#fca5a5', fontSize: '0.85rem', marginBottom: '16px' }}>
+          <div style={{ padding: '10px 14px', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid #ef4444', borderRadius: '8px', color: '#fca5a5', fontSize: '0.85rem', marginBottom: '16px' }}>
             {error}
           </div>
         )}

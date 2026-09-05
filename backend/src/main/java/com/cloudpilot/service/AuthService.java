@@ -30,13 +30,18 @@ public class AuthService {
 
     @Transactional
     public AuthResponseDto register(AuthRequestDto request) {
-        if (customerRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("User with email " + request.getEmail() + " already exists.");
+        String email = request.getEmail() != null ? request.getEmail().trim().toLowerCase() : "";
+        if (email.isBlank()) {
+            throw new IllegalArgumentException("Email address cannot be blank.");
+        }
+
+        if (customerRepository.findByEmailIgnoreCase(email).isPresent()) {
+            throw new IllegalArgumentException("An account with email " + email + " already exists.");
         }
 
         Customer customer = Customer.builder()
-                .name(request.getName() != null ? request.getName() : "Customer")
-                .email(request.getEmail())
+                .name(request.getName() != null && !request.getName().isBlank() ? request.getName().trim() : "Customer")
+                .email(email)
                 .phone("+1-555-0000")
                 .build();
 
@@ -61,7 +66,7 @@ public class AuthService {
     }
 
     public AuthResponseDto login(AuthRequestDto request) {
-        String email = request.getEmail();
+        String email = request.getEmail() != null ? request.getEmail().trim().toLowerCase() : "";
         String role = "CUSTOMER";
         Long userId = 1L;
         String name = "Demo User";
@@ -71,7 +76,7 @@ public class AuthService {
             userId = 0L;
             name = "System Administrator";
         } else {
-            var custOpt = customerRepository.findByEmail(email);
+            var custOpt = customerRepository.findByEmailIgnoreCase(email);
             if (custOpt.isPresent()) {
                 userId = custOpt.get().getId();
                 name = custOpt.get().getName();
