@@ -5,6 +5,7 @@ import com.cloudpilot.model.Customer;
 import com.cloudpilot.model.Order;
 import com.cloudpilot.model.Ticket;
 import com.cloudpilot.repository.CustomerRepository;
+import com.cloudpilot.repository.OrderRepository;
 import com.cloudpilot.repository.TicketRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,9 @@ class CustomerServiceTest {
     private CustomerRepository customerRepository;
 
     @Mock
+    private OrderRepository orderRepository;
+
+    @Mock
     private TicketRepository ticketRepository;
 
     @Mock
@@ -38,7 +42,7 @@ class CustomerServiceTest {
 
     @BeforeEach
     void setUp() {
-        customerService = new CustomerService(customerRepository, ticketRepository, aiClientService);
+        customerService = new CustomerService(customerRepository, orderRepository, ticketRepository, aiClientService);
     }
 
     @Test
@@ -52,7 +56,6 @@ class CustomerServiceTest {
                 .id(1L)
                 .name("Acme Corp")
                 .email("contact@acme.com")
-                .orders(List.of(order1, order2))
                 .createdAt(now.minusMonths(6))
                 .build();
 
@@ -60,6 +63,7 @@ class CustomerServiceTest {
         Ticket resolvedTicket = Ticket.builder().id(102L).subject("Old Issue").status(Ticket.Status.RESOLVED).createdAt(now.minusDays(20)).build();
 
         when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
+        when(orderRepository.findByCustomerIdOrderByCreatedAtDesc(1L)).thenReturn(List.of(order1, order2));
         when(ticketRepository.findByCustomerIdOrderByCreatedAtDesc(1L)).thenReturn(List.of(openTicket, resolvedTicket));
         when(aiClientService.getCustomerSummary(eq("Acme Corp"), any(), any())).thenReturn("Acme Corp is an active enterprise customer.");
 

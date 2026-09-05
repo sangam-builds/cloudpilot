@@ -5,6 +5,7 @@ import com.cloudpilot.model.Customer;
 import com.cloudpilot.model.Order;
 import com.cloudpilot.model.Ticket;
 import com.cloudpilot.repository.CustomerRepository;
+import com.cloudpilot.repository.OrderRepository;
 import com.cloudpilot.repository.TicketRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +24,13 @@ public class CustomerService {
     private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
     private final CustomerRepository customerRepository;
+    private final OrderRepository orderRepository;
     private final TicketRepository ticketRepository;
     private final AiClientService aiClientService;
 
-    public CustomerService(CustomerRepository customerRepository, TicketRepository ticketRepository, AiClientService aiClientService) {
+    public CustomerService(CustomerRepository customerRepository, OrderRepository orderRepository, TicketRepository ticketRepository, AiClientService aiClientService) {
         this.customerRepository = customerRepository;
+        this.orderRepository = orderRepository;
         this.ticketRepository = ticketRepository;
         this.aiClientService = aiClientService;
     }
@@ -48,7 +51,7 @@ public class CustomerService {
     public Customer360Dto getCustomer360(Long customerId) {
         Customer customer = getCustomerById(customerId);
 
-        List<Order> orders = customer.getOrders() != null ? customer.getOrders() : List.of();
+        List<Order> orders = orderRepository.findByCustomerIdOrderByCreatedAtDesc(customerId);
         List<Ticket> tickets = ticketRepository.findByCustomerIdOrderByCreatedAtDesc(customerId);
 
         BigDecimal totalSpend = orders.stream()

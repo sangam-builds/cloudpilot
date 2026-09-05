@@ -9,14 +9,19 @@ export const Customer360 = ({ customerId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const loadData = () => {
     if (customerId) {
       setLoading(true);
+      setError(null);
       customerApi.getCustomer360(customerId)
         .then((res) => setData(res))
         .catch((err) => setError(err.response?.data?.message || 'Failed to load Customer 360 data.'))
         .finally(() => setLoading(false));
     }
+  };
+
+  useEffect(() => {
+    loadData();
   }, [customerId]);
 
   if (loading) {
@@ -29,8 +34,17 @@ export const Customer360 = ({ customerId }) => {
 
   if (error || !data) {
     return (
-      <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: '#f87171' }}>
-        {error || 'Customer profile not found.'}
+      <div className="glass-panel" style={{ padding: '40px', textAlign: 'center' }}>
+        <p style={{ color: '#f87171', marginBottom: '16px', fontSize: '0.95rem' }}>
+          {error || 'Customer profile not found.'}
+        </p>
+        <button
+          onClick={loadData}
+          className="btn btn-secondary"
+          style={{ padding: '8px 16px', fontSize: '0.85rem' }}
+        >
+          Retry
+        </button>
       </div>
     );
   }

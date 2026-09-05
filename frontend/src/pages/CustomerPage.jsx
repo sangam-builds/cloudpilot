@@ -1,26 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/common/Navbar';
 import { Customer360 } from '../components/customer360/Customer360';
+import { customerApi } from '../api/customerApi';
 import { Users } from 'lucide-react';
+
+const DEFAULT_CUSTOMERS = [
+  { id: 1, name: 'Acme Corporation' },
+  { id: 2, name: 'TechCorp Global' },
+  { id: 3, name: 'Omni Logistics' },
+  { id: 4, name: 'Nova Financials' },
+  { id: 5, name: 'Apex Cloud' },
+  { id: 6, name: 'Vanguard Retailers' },
+  { id: 7, name: 'Solstice Media' },
+  { id: 8, name: 'Zenith Health' },
+  { id: 9, name: 'HyperScale AI' },
+  { id: 10, name: 'BluePeak Systems' },
+];
 
 export const CustomerPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const currentId = id ? Number(id) : 1;
+  const [customers, setCustomers] = useState(DEFAULT_CUSTOMERS);
 
-  const customers = [
-    { id: 1, name: 'Acme Corporation' },
-    { id: 2, name: 'TechCorp Global' },
-    { id: 3, name: 'Omni Logistics' },
-    { id: 4, name: 'Nova Financials' },
-    { id: 5, name: 'Apex Cloud' },
-    { id: 6, name: 'Vanguard Retailers' },
-    { id: 7, name: 'Solstice Media' },
-    { id: 8, name: 'Zenith Health' },
-    { id: 9, name: 'HyperScale AI' },
-    { id: 10, name: 'BluePeak Systems' },
-  ];
+  useEffect(() => {
+    customerApi.listCustomers({ page: 0, size: 50 })
+      .then((res) => {
+        if (res && res.content && res.content.length > 0) {
+          setCustomers(res.content.map((c) => ({ id: c.id, name: c.name })));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <div>
