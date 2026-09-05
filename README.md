@@ -1,6 +1,7 @@
 # 🚀 CloudPilot — Intelligent Support & SLA Management Platform
 
 [![CI Pipeline](https://github.com/sangam-builds/cloudpilot/actions/workflows/ci.yml/badge.svg)](https://github.com/sangam-builds/cloudpilot/actions/workflows/ci.yml)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-success.svg?logo=vercel)](https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login)
 [![License: MIT](https://img.shields.io/badge/License-MIT-indigo.svg)](LICENSE)
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sangam-builds/cloudpilot)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/sangam-builds/cloudpilot&root-directory=frontend)
@@ -10,14 +11,16 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16_Cloud-336791.svg?logo=postgresql)](https://www.postgresql.org)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg?logo=docker)](https://www.docker.com)
 
+> 🚀 **Live Demo**: [https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login](https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login)  
+> *Instant 1-click access with pre-configured Admin, Support Agent, and Enterprise Customer accounts.*
+
 **CloudPilot** is an enterprise-grade AI-powered customer support orchestration and dynamic SLA monitoring platform. It combines real-time NLP classification, semantic RAG draft reply generation, mathematical multi-factor agent scoring, Customer 360 intelligence, and microservice blast radius simulation into a unified dark-mode dashboard.
 
 ---
 
-## 🌐 1-Click Free Cloud Deployment
+## 🌐 Live Demo & 1-Click Free Cloud Deployment
 
-CloudPilot is configured for 100% free multi-platform deployment on **Render**, **Vercel**, **Netlify**, **Railway**, and **Neon DB**:
-
+- 🔗 **Production Live Demo**: [https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login](https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login) (Try directly in browser with 1-click test roles).
 - 🚀 **1-Click Render Blueprint**: [Deploy to Render](https://render.com/deploy?repo=https://github.com/sangam-builds/cloudpilot) (Instantiates FastAPI AI Service, Spring Boot Engine, and React SPA with Neon DB).
 - ⚡ **Vercel / Netlify Frontend**: Point to the `frontend/` directory with `VITE_API_BASE_URL` set to your backend URL.
 - 📖 **Complete Step-by-Step Guide**: See [docs/deployment.md](docs/deployment.md) for detailed platform-by-platform instructions.

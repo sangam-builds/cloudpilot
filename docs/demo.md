@@ -2,6 +2,8 @@
 
 This guide provides a rapid 5-minute walkthrough of CloudPilot's core capabilities for evaluators, judges, and developers.
 
+> 🌐 **Live Web Demo**: [https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login](https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login) (No local setup required)
+
 ---
 
 ## 🚀 Quick Launch (Single Command)

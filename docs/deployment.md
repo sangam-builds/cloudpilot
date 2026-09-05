@@ -2,6 +2,8 @@
 
 This guide covers 100% free cloud deployment of CloudPilot across top platforms including **Render**, **Vercel**, **Netlify**, **Railway**, and **Neon PostgreSQL**.
 
+> 🚀 **Live Production Demo**: [https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login](https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login)
+
 ---
 
 ## Architecture Overview
