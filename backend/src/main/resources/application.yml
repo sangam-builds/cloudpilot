@@ -60,7 +60,7 @@ cloudpilot:
       refresh-expiration-ms: 604800000 # 7 days
   ai-service:
     base-url: ${CLOUDPILOT_AI_SERVICE_BASE_URL:${AI_SERVICE_URL:http://localhost:8000}}
-    timeout-ms: 5000
+    timeout-ms: ${AI_SERVICE_TIMEOUT_MS:15000}
   sla:
     scan-rate-ms: 60000
 

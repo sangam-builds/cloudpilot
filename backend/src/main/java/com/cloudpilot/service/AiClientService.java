@@ -44,14 +44,14 @@ public class AiClientService {
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Map<String, String>> entity = new HttpEntity<>(request, headers);
 
-            ResponseEntity<ClassificationDto> response = restTemplate.postForEntity(endpoint, entity, ClassificationDto.class);
-            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            ResponseEntity<ClassificationDto> response = executeWithRetry(endpoint, entity, ClassificationDto.class);
+            if (response != null && response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 log.info("AI Service classified ticket successfully: category={}, priority={}",
                         response.getBody().getCategory(), response.getBody().getPriority());
                 return response.getBody();
             }
         } catch (Exception ex) {
-            log.warn("AI Service call to {} failed: {}. Triggering Java keyword fallback classifier.", endpoint, ex.getMessage());
+            log.warn("AI Service classify failed (fallback active): {}", formatError(ex));
         }
 
         return ruleBasedFallbackClassifier(subject, description);
@@ -70,12 +70,12 @@ public class AiClientService {
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(payload, headers);
 
-            ResponseEntity<Map> response = restTemplate.postForEntity(endpoint, entity, Map.class);
-            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null && response.getBody().containsKey("summary")) {
+            ResponseEntity<Map> response = executeWithRetry(endpoint, entity, Map.class);
+            if (response != null && response.getStatusCode().is2xxSuccessful() && response.getBody() != null && response.getBody().containsKey("summary")) {
                 return (String) response.getBody().get("summary");
             }
         } catch (Exception ex) {
-            log.warn("AI Customer Summary failed (fallback active): {}", ex.getMessage());
+            log.warn("AI Customer Summary failed (fallback active): {}", formatError(ex));
         }
 
         return String.format("%s has %d recorded support ticket(s) and %d order transaction(s). Account is active and in good standing.",
@@ -94,15 +94,48 @@ public class AiClientService {
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Map<String, String>> entity = new HttpEntity<>(payload, headers);
 
-            ResponseEntity<Map> response = restTemplate.postForEntity(endpoint, entity, Map.class);
-            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null && response.getBody().containsKey("suggested_reply")) {
+            ResponseEntity<Map> response = executeWithRetry(endpoint, entity, Map.class);
+            if (response != null && response.getStatusCode().is2xxSuccessful() && response.getBody() != null && response.getBody().containsKey("suggested_reply")) {
                 return (String) response.getBody().get("suggested_reply");
             }
         } catch (Exception ex) {
-            log.warn("AI Suggested Reply failed (fallback active): {}", ex.getMessage());
+            log.warn("AI Suggested Reply failed (fallback active): {}", formatError(ex));
         }
 
         return "Thank you for reaching out to CloudPilot Support. We have received your inquiry and our engineering team is actively investigating. We will update you shortly.";
+    }
+
+    private <T> ResponseEntity<T> executeWithRetry(String endpoint, HttpEntity<?> entity, Class<T> responseType) {
+        try {
+            return restTemplate.postForEntity(endpoint, entity, responseType);
+        } catch (org.springframework.web.client.HttpStatusCodeException ex) {
+            int code = ex.getStatusCode().value();
+            // Retry once on gateway/cold-start issues (502/503/504)
+            if (code == 502 || code == 503 || code == 504) {
+                try {
+                    Thread.sleep(1000);
+                    return restTemplate.postForEntity(endpoint, entity, responseType);
+                } catch (Exception ignored) {
+                    throw ex;
+                }
+            }
+            throw ex;
+        }
+    }
+
+    private String formatError(Exception ex) {
+        if (ex instanceof org.springframework.web.client.HttpStatusCodeException httpEx) {
+            return httpEx.getStatusCode().value() + " " + httpEx.getStatusText();
+        }
+        String msg = ex.getMessage();
+        if (msg == null) return ex.getClass().getSimpleName();
+        if (msg.contains("<!DOCTYPE") || msg.contains("<html") || msg.length() > 120) {
+            if (msg.contains("502")) return "502 Bad Gateway (Service waking up or unreachable)";
+            if (msg.contains("503")) return "503 Service Unavailable";
+            if (msg.contains("504")) return "504 Gateway Timeout";
+            return msg.substring(0, Math.min(msg.length(), 100)) + "...";
+        }
+        return msg;
     }
 
     public ClassificationDto ruleBasedFallbackClassifier(String subject, String description) {
