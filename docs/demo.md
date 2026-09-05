@@ -75,4 +75,4 @@ docker compose up --build
    - Click **Run Traversal**.
    - Watch the BFS/DFS graph algorithm calculate downstream affected dependencies (`Order Service`, `Fulfillment Service`, `Shipping Logistics`, `Notification Service`).
 4. Review the **Agent Workload Matrix** and toggle an agent's availability to `Unavailable`. Subsequent tickets will immediately bypass this agent!
-5. Inspect the **Immutable Compliance & Security Audit Trail** for SOC2 change records.
+5. Inspect the **Immutable Audit Trail** table tracking lifecycle changes and administrative actions.

@@ -74,7 +74,7 @@ export const AdminDashboard = () => {
       {/* Agent Workload & Availability Matrix */}
       <AgentWorkloadTable />
 
-      {/* SOC2 Audit Log Trail */}
+      {/* Immutable Audit Log Trail */}
       <AuditLogViewer />
     </div>
   );

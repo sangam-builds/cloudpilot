@@ -13,7 +13,7 @@ export const AdminPage = () => {
             System Administration &amp; SLA Management
           </h1>
           <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-            Real-time pipeline analytics, agent capacity tuning, blast radius simulator, and SOC2 audit trail.
+            Real-time pipeline analytics, agent capacity tuning, blast radius simulator, and audit logging.
           </p>
         </div>
 

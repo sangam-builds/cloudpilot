@@ -41,10 +41,10 @@ CloudPilot is pre-configured to connect directly to a live serverless cloud data
 | Config Key | Value / Environment Variable |
 |---|---|
 | **Database Engine** | PostgreSQL 16 (Serverless with SSL Pooling) |
-| **`CLOUD_DB_URL`** | `jdbc:postgresql://ep-twilight-tooth-ax4dzdsg-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require` |
-| **`CLOUD_DB_USER`** | `neondb_owner` |
-| **`CLOUD_DB_PASSWORD`**| `npg_bvsK7ClNAhn2` |
-| **`JWT_SECRET`** | `404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970` |
+| **`CLOUD_DB_URL`** | `jdbc:postgresql://<your-db-host>/neondb?sslmode=require` |
+| **`CLOUD_DB_USER`** | `<your-db-user>` |
+| **`CLOUD_DB_PASSWORD`**| `<your-db-password>` |
+| **`JWT_SECRET`** | `<your-256-bit-secret-key>` |
 | **`REDIS_HOST`** | Cloud Redis Host (e.g. from Upstash Redis or Render Redis) |
 | **`REDIS_PORT`** | Cloud Redis Port (e.g. `6379` or `32145`) |
 | **`REDIS_PASSWORD`** | Cloud Redis Password |
@@ -74,12 +74,13 @@ Render provides free Docker web services and free static sites. CloudPilot inclu
 1. Fork or push this repository to your GitHub account: `https://github.com/sangam-builds/cloudpilot`
 2. Go to [Render Dashboard](https://dashboard.render.com/) and click **New +** -> **Blueprint**.
 3. Connect your repository.
-4. Render will automatically detect `render.yaml` and instantiate 3 free services:
+4. Render will automatically detect `render.yaml` and prompt for required credentials like `CLOUD_DB_PASSWORD`.
+5. Render instantiates 3 services:
    - **`cloudpilot-ai-service`**: FastAPI Python / Docker container
    - **`cloudpilot-backend`**: Spring Boot Java 21 Docker container with Neon DB & Flyway
    - **`cloudpilot-frontend`**: Vite React SPA static site
-5. Click **Apply**.
-6. Once deployed, open the frontend URL (e.g., `https://cloudpilot-frontend.onrender.com`).
+6. Click **Apply**.
+7. Once deployed, open the frontend URL (e.g., `https://cloudpilot-frontend.onrender.com`).
 
 ---
 
@@ -97,11 +98,11 @@ Render provides free Docker web services and free static sites. CloudPilot inclu
    - **Dockerfile Path**: `Dockerfile` (or `./backend/Dockerfile`)
    - Add Environment Variables:
      - `SPRING_PROFILES_ACTIVE`: `docker`
-     - `CLOUD_DB_URL`: `jdbc:postgresql://ep-twilight-tooth-ax4dzdsg-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require`
-     - `CLOUD_DB_USER`: `neondb_owner`
-     - `CLOUD_DB_PASSWORD`: `npg_bvsK7ClNAhn2`
+     - `CLOUD_DB_URL`: `jdbc:postgresql://<your-db-host>/neondb?sslmode=require`
+     - `CLOUD_DB_USER`: `<your-db-user>`
+     - `CLOUD_DB_PASSWORD`: `<your-db-password>`
      - `CLOUDPILOT_AI_SERVICE_BASE_URL`: `https://cloudpilot-ai.onrender.com`
-     - `JWT_SECRET`: `404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970`
+     - `JWT_SECRET`: `<your-jwt-secret>`
    - Note the deployed URL (e.g. `https://cloudpilot-backend.onrender.com`).
 
 ### Step 2B: Deploy Frontend on Vercel

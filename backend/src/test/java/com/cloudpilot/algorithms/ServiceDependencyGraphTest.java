@@ -42,4 +42,35 @@ class ServiceDependencyGraphTest {
         List<String> affected = graph.findAffectedServicesBFS("NonExistentService");
         assertTrue(affected.isEmpty());
     }
+
+    @Test
+    void testLeafNodeFailure_HasZeroDownstreamImpact() {
+        // Notification Service is a sink/leaf node with no outgoing edges
+        List<String> affected = graph.findAffectedServicesBFS("Notification Service");
+        assertTrue(affected.isEmpty(), "Leaf node failure should have 0 downstream affected services");
+    }
+
+    @Test
+    void testDisconnectedGraphComponent() {
+        ServiceDependencyGraph customGraph = new ServiceDependencyGraph();
+        customGraph.addEdge("Isolated A", "Isolated B");
+        customGraph.addEdge("Cluster X", "Cluster Y");
+
+        List<String> affected = customGraph.findAffectedServicesBFS("Isolated A");
+        assertEquals(List.of("Isolated B"), affected);
+        assertFalse(affected.contains("Cluster Y"));
+    }
+
+    @Test
+    void testCycleHandling_DoesNotInfiniteLoop() {
+        ServiceDependencyGraph cyclicGraph = new ServiceDependencyGraph();
+        cyclicGraph.addEdge("Node 1", "Node 2");
+        cyclicGraph.addEdge("Node 2", "Node 3");
+        cyclicGraph.addEdge("Node 3", "Node 1"); // Cycle
+
+        List<String> affected = cyclicGraph.findAffectedServicesBFS("Node 1");
+        assertEquals(2, affected.size());
+        assertTrue(affected.contains("Node 2"));
+        assertTrue(affected.contains("Node 3"));
+    }
 }

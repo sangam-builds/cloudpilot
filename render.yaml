@@ -39,9 +39,9 @@ services:
       - key: CLOUD_DB_USER
         value: neondb_owner
       - key: CLOUD_DB_PASSWORD
-        value: npg_bvsK7ClNAhn2
+        sync: false
       - key: JWT_SECRET
-        value: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+        generateValue: true
       - key: CLOUDPILOT_AI_SERVICE_BASE_URL
         fromService:
           type: web

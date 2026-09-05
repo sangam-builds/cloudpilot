@@ -6,8 +6,8 @@ import { Zap, Lock, Mail, ArrowRight, Sparkles } from 'lucide-react';
 export const LoginForm = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('alex@cloudpilot.io');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -27,7 +27,6 @@ export const LoginForm = () => {
 
   const quickLogin = (presetEmail) => {
     setEmail(presetEmail);
-    setPassword('password123');
   };
 
   return (

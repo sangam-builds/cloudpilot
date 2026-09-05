@@ -1,4 +1,4 @@
-# 🚀 CloudPilot — Intelligent Support & SLA Management Platform
+# 🚀 CloudPilot — Support Ticket Triage & SLA Monitoring Platform
 
 [![CI Pipeline](https://github.com/sangam-builds/cloudpilot/actions/workflows/ci.yml/badge.svg)](https://github.com/sangam-builds/cloudpilot/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-success.svg?logo=vercel)](https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login)
@@ -11,19 +11,23 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16_Cloud-336791.svg?logo=postgresql)](https://www.postgresql.org)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg?logo=docker)](https://www.docker.com)
 
-> 🚀 **Live Demo**: [https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login](https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login)  
-> *Instant 1-click access with pre-configured Admin, Support Agent, and Enterprise Customer accounts.*
+> 🌐 **Live Web Demo**: [https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login](https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login)  
+> *Instant access with pre-seeded demo accounts (Admin, Support Agent, Customer).*
 
-**CloudPilot** is an enterprise-grade AI-powered customer support orchestration and dynamic SLA monitoring platform. It combines real-time NLP classification, semantic RAG draft reply generation, mathematical multi-factor agent scoring, Customer 360 intelligence, and microservice blast radius simulation into a unified dark-mode dashboard.
+**CloudPilot** is a multi-service customer support ticket triage and SLA monitoring platform. It combines automated NLP classification and RAG draft replies with deterministic Java dispatch algorithms (multi-factor agent scoring, FIFO priority queues, and microservice dependency graph traversal for blast radius analysis).
 
 ---
 
-## 🌐 Live Demo & 1-Click Free Cloud Deployment
+## 🛠️ What I Built vs. What I Used
 
-- 🔗 **Production Live Demo**: [https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login](https://cloudpilot-frontend-qfbwl7ncz-sangams-projects-d081cefb.vercel.app/login) (Try directly in browser with 1-click test roles).
-- 🚀 **1-Click Render Blueprint**: [Deploy to Render](https://render.com/deploy?repo=https://github.com/sangam-builds/cloudpilot) (Instantiates FastAPI AI Service, Spring Boot Engine, and React SPA with Neon DB).
-- ⚡ **Vercel / Netlify Frontend**: Point to the `frontend/` directory with `VITE_API_BASE_URL` set to your backend URL.
-- 📖 **Complete Step-by-Step Guide**: See [docs/deployment.md](docs/deployment.md) for detailed platform-by-platform instructions.
+| Layer | Custom Implementation (What I Built) | Libraries & Infrastructure (What I Used) |
+|---|---|---|
+| **Dispatch & Routing** | Multi-factor agent scoring algorithm ($\mathcal{O}(n \log n)$), bounded priority queue with FIFO tie-breaking, keyword-based triage fallback engine. | Spring Boot 3.3, Java 21 standard concurrency & collections. |
+| **SLA & Reliability** | Periodic SLA deadline monitor (`@Scheduled` cron), dynamic `AT_RISK` / `BREACHED` status transitions, Micrometer custom metrics. | Micrometer, Prometheus, Grafana. |
+| **Incident Simulation** | Directed graph model for microservice topology, BFS/DFS blast radius traversal ($\mathcal{O}(V + E)$). | Java Collections (Adjacency List). |
+| **AI & NLP** | Zero-shot classification pipeline, vector similarity FAQ retriever, customer summary synthesis. | FastAPI, SentenceTransformers (`all-MiniLM-L6-v2`), PyTorch, OpenAI API. |
+| **Data & Storage** | Relational data schema, index design on query hotspots, Customer 360 aggregation service, immutable audit logger. | PostgreSQL 16, Flyway migrations, Redis & Lettuce, Spring Data JPA. |
+| **Frontend & UI** | Responsive operations command center, role-based views (`ADMIN`, `AGENT`, `CUSTOMER`), interactive graph visualization. | React 18, Vite, Lucide React, CSS variables design system. |
 
 ---
 
@@ -34,14 +38,14 @@ graph TB
     subgraph "Frontend Layer (React 18 + Vite)"
         UI[React SPA / Vite]
         AuthCtx[Auth & Role Context]
-        Components[Tickets / Customer360 / Admin Console]
+        Components[Tickets / Customer 360 / Admin Console]
         UI --> AuthCtx
         UI --> Components
     end
 
-    subgraph "Core Backend (Spring Boot 3 / Java 21)"
+    subgraph "Core Backend (Spring Boot 3.3 / Java 21)"
         API[REST Controllers]
-        Sec[JWT Security & Filters]
+        Sec[JWT Security & RBAC]
         TicketSvc[Ticket & SLA Engine]
         AssignSvc[Agent Assignment Engine]
         GraphEngine[DSA Blast Radius BFS/DFS]
@@ -58,7 +62,7 @@ graph TB
 
     subgraph "AI Microservice (Python FastAPI)"
         FastAPI[FastAPI Gateway]
-        Classifier[NLP Classifier & Fallback]
+        Classifier[NLP Classifier & Keyword Fallback]
         RAG[Vector Embeddings & FAQ RAG]
         Summary[Customer 360 Synthesizer]
         
@@ -68,7 +72,7 @@ graph TB
     end
 
     subgraph "Storage & Observability"
-        Postgres[(Cloud PostgreSQL / Flyway)]
+        Postgres[(PostgreSQL 16 / Flyway)]
         Redis[(Redis Cache)]
         Prometheus[Prometheus Metrics]
         Grafana[Grafana Dashboards]
@@ -84,19 +88,28 @@ graph TB
 
 ---
 
-## 🌟 Key Features
+## 🌟 Core Subsystems & Features
 
-1. **🤖 AI-Powered Real-Time Triage**: Automatically extracts categories, priority ratings (`HIGH`, `MEDIUM`, `LOW`), and sentiment tags (`POSITIVE`, `NEUTRAL`, `NEGATIVE`, `FRUSTRATED`) with seamless Java keyword fallback resilience.
-2. **🧠 Grounded RAG FAQ Copilot**: Vector semantic retrieval matching customer issues against verified knowledge bases to generate draft responses with 1-click apply.
-3. **📐 Deterministic DSA Algorithms**:
-   - $\mathcal{O}(n \log n)$ Multi-Factor Weighted Agent Scoring ($40\%$ Skill Match $+ 30\%$ Workload $+ 20\%$ CSAT Rating $+ 10\%$ Availability).
-   - $\mathcal{O}(V + E)$ Service Dependency Graph BFS/DFS for incident blast radius simulation.
-   - Bounded PriorityQueue with FIFO timestamp tie-breaking.
-   - Sub-millisecond $\mathcal{O}(\log N)$ binary search across incident timelines.
-4. **⏱️ Dynamic SLA Monitoring**: `@Scheduled` 60s daemon scanning SLA deadlines, automatically triggering `AT_RISK` and `BREACHED` flags and Prometheus counters.
-5. **👤 Customer 360 View**: Aggregated lifetime transaction spend, open/resolved ticket statistics, and chronological activity streams.
-6. **🛡️ Enterprise Security & Auditing**: Stateless JWT authentication, role-based access control (`ADMIN`, `AGENT`, `CUSTOMER`), and immutable SOC2 audit trail logging.
-7. **☁️ Cloud-Ready Database**: Native support for cloud-hosted PostgreSQL instances (Neon, Supabase, Render, AWS RDS) with SSL encryption and Flyway schema auto-migrations.
+### Core Subsystems
+
+1. **Multi-Factor Agent Scoring Engine ($\mathcal{O}(n \log n)$)**:
+   - Computes weighted composite scores across 4 parameters: Skill Match ($40\%$), Workload Balance ($30\%$), Customer Satisfaction Rating ($20\%$), and Immediate Availability ($10\%$).
+   - Returns deterministic agent ranking with bounded priority queue fallback when agents are at capacity.
+
+2. **SLA Scanner & Observability Pipeline**:
+   - `@Scheduled` background worker scans open tickets every 60 seconds.
+   - Automatically transitions tickets to `AT_RISK` when remaining time $\le 20\%$ and `BREACHED` when past deadline.
+   - Publishes custom Prometheus metrics (`cloudpilot_sla_breaches_total`, `cloudpilot_sla_at_risk_total`) scraped and visualized via Grafana.
+
+3. **Microservice Dependency Blast Radius Simulator ($\mathcal{O}(V + E)$)**:
+   - Models service topologies as directed graphs using an adjacency list.
+   - Uses Breadth-First Search (BFS) to compute the cascade impact and critical downstream dependencies when a service experiences an outage.
+
+### Supporting Capabilities
+
+- **AI NLP Triage & RAG Copilot**: Classifies category, priority, and sentiment via FastAPI microservice; falls back gracefully to Java regex heuristics if the AI service is unreachable. Vector search retrieves relevant FAQ articles to generate draft agent responses.
+- **Customer 360 Aggregator**: Merges order history, lifetime customer spend, open support requests, and chronological activity timelines into a consolidated customer profile.
+- **Role-Based Access Control & Audit Trail**: Stateless JWT authentication with enforced roles (`ADMIN`, `AGENT`, `CUSTOMER`) and append-only audit logging for system actions.
 
 ---
 
@@ -109,53 +122,39 @@ The entire multi-tier stack can be launched locally with a single command:
 git clone https://github.com/sangam-builds/cloudpilot.git
 cd cloudpilot
 
-# Launch all 7 services
+# Launch all 7 containers
 docker compose up --build
 ```
 
 ### Access URLs
-| Service | URL | Default Credentials |
+| Service | URL | Notes |
 |---|---|---|
-| **Frontend UI** | [http://localhost:3000](http://localhost:3000) | Preset 1-click accounts on login |
-| **Spring Boot Backend** | [http://localhost:8080](http://localhost:8080) | `admin@cloudpilot.io` / `password123` |
-| **Swagger API Docs** | [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) | — |
-| **FastAPI AI Engine** | [http://localhost:8000/docs](http://localhost:8000/docs) | Open OpenAPI spec |
-| **Prometheus Metrics** | [http://localhost:9090](http://localhost:9090) | — |
-| **Grafana Dashboards** | [http://localhost:3001](http://localhost:3001) | `admin` / `admin` |
+| **Frontend UI** | [http://localhost:3000](http://localhost:3000) | Preset 1-click accounts on login screen |
+| **Spring Boot Backend** | [http://localhost:8080](http://localhost:8080) | REST API endpoints |
+| **Swagger / OpenAPI** | [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) | Interactive API documentation |
+| **FastAPI AI Engine** | [http://localhost:8000/docs](http://localhost:8000/docs) | NLP & RAG endpoint docs |
+| **Prometheus Metrics** | [http://localhost:9090](http://localhost:9090) | Application metrics scraper |
+| **Grafana Dashboards** | [http://localhost:3001](http://localhost:3001) | Pre-configured dashboard (`admin` / `admin`) |
 
 ---
 
-## ☁️ Cloud Database Deployment
+## 🧪 Automated Testing & Verification
 
-To point the backend to your managed cloud PostgreSQL database (e.g. Neon, Supabase, AWS RDS):
-
-```bash
-# Set environment variables
-export CLOUD_DB_URL="jdbc:postgresql://<your-host>.neon.tech/cloudpilot?sslmode=require"
-export CLOUD_DB_USER="<your-user>"
-export CLOUD_DB_PASSWORD="<your-password>"
-
-# Launch production compose
-docker compose -f docker-compose.prod.yml up --build
-```
-
----
-
-## 🧪 Testing & Quality Assurance
-
-### Run Backend Unit & Integration Tests (11/11 passing)
+### Backend Unit & Integration Tests (33/33 passing)
 ```bash
 cd backend
 mvn test
 ```
+- Tests cover `AgentScorer`, `ServiceDependencyGraph`, `TicketPriorityQueue`, `TicketTimestampSearch`, `SlaMonitorJob`, `AssignmentService`, `CustomerService`, `TicketService`, `SlaService`, `AuthService`, and `SecurityRbac`.
 
-### Run Python AI Service Tests (7/7 passing)
+### Python AI Service Tests (9/9 passing)
 ```bash
 cd ai-service
 pytest tests/ -v
 ```
+- Tests cover zero-shot ticket classification, heuristic fallback mechanisms, RAG knowledge retrieval, threshold fallbacks, and similar ticket lookups.
 
-### Build Frontend Production Assets
+### Frontend Production Build
 ```bash
 cd frontend
 npm run build
@@ -163,12 +162,14 @@ npm run build
 
 ---
 
-## 📚 Technical Documentation
+## 📚 Technical Documentation & Design Records
 
-- 📖 [REST API Reference](docs/API.md) — Detailed OpenAPI schemas and status code matrix.
-- 📐 [DSA & Algorithms Deep Dive](docs/algorithms.md) — Scoring formulas, graph traversal, and complexity analysis.
-- 🗄️ [Database Architecture](docs/database-design.md) — ER diagrams, indexing strategy, and state transitions.
-- 🎬 [Live Demonstration Script](docs/demo.md) — Step-by-step walkthrough guide for evaluators.
+- 🏛️ [Architecture Decision Records (ADRs)](docs/decisions.md) — 6 design decisions covering framework selection, cache strategy, scoring weights, and scope boundaries.
+- 📐 [DSA & Algorithms Deep Dive](docs/algorithms.md) — Exact mathematical formulas, step-by-step worked examples, and asymptotic complexity derivations.
+- 🗄️ [Database Architecture](docs/database-design.md) — Relational schema, indexing strategy, and state transition lifecycle.
+- 📖 [REST API Reference](docs/API.md) — Request/response schemas, status codes, and security requirements.
+- 🎬 [Demonstration Guide](docs/demo.md) — Step-by-step evaluator walkthrough script.
+- ☁️ [Deployment Guide](docs/deployment.md) — Instructions for hosting on Render, Vercel, and Neon.
 
 ---
 

@@ -2,12 +2,12 @@ import psycopg2
 import sys
 import os
 
-# Neon Connection details
-DB_HOST = "ep-twilight-tooth-ax4dzdsg-pooler.c-4.us-east-2.aws.neon.tech"
-DB_NAME = "neondb"
-DB_USER = "neondb_owner"
-DB_PASS = "npg_bvsK7ClNAhn2"
-DB_PORT = 5432
+# Neon Connection details (configurable via environment variables)
+DB_HOST = os.getenv("CLOUD_DB_HOST", "ep-twilight-tooth-ax4dzdsg-pooler.c-4.us-east-2.aws.neon.tech")
+DB_NAME = os.getenv("CLOUD_DB_NAME", "neondb")
+DB_USER = os.getenv("CLOUD_DB_USER", "neondb_owner")
+DB_PASS = os.getenv("CLOUD_DB_PASSWORD", "npg_bvsK7ClNAhn2")
+DB_PORT = int(os.getenv("CLOUD_DB_PORT", 5432))
 
 def main():
     print(f"Connecting to Neon Cloud PostgreSQL ({DB_HOST})...")

@@ -40,9 +40,9 @@ export const AuditLogViewer = () => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <ShieldCheck size={18} color="#10b981" />
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>Immutable Compliance &amp; Security Audit Trail</h3>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>Immutable System &amp; Security Audit Trail</h3>
         </div>
-        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Auto-recorded for SOC2 / ISO-27001</span>
+        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Append-only security log</span>
       </div>
 
       <div style={{ overflowX: 'auto', marginBottom: '16px' }}>

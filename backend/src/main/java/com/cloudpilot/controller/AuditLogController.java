@@ -8,12 +8,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 
 @RestController
 @RequestMapping("/api/audit-logs")
+@PreAuthorize("hasAnyRole('ADMIN', 'AGENT')")
 @Tag(name = "Audit Logs", description = "Admin audit trail and compliance history")
 public class AuditLogController {
 
