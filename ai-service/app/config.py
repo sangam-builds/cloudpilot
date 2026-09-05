@@ -16,6 +16,7 @@ class Settings(BaseSettings):
 
     # Embedding Model Settings
     EMBEDDING_MODEL_NAME: str = "all-MiniLM-L6-v2"
+    USE_LIGHTWEIGHT_EMBEDDINGS: bool = True
 
     # CORS
     ALLOWED_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:5173", "http://localhost:8080", "*"]

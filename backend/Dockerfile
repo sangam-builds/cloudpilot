@@ -14,4 +14,4 @@ COPY --from=build /app/target/*.jar app.jar
 USER appuser
 EXPOSE 8080
 ENV SPRING_PROFILES_ACTIVE=docker
-ENTRYPOINT ["java", "-XX:+UseG1GC", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+UseSerialGC", "-Xmx256m", "-Xms128m", "-XX:MaxMetaspaceSize=128m", "-jar", "app.jar"]

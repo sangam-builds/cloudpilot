@@ -19,6 +19,8 @@ services:
         value: gpt-4o-mini
       - key: EMBEDDING_MODEL_NAME
         value: all-MiniLM-L6-v2
+      - key: USE_LIGHTWEIGHT_EMBEDDINGS
+        value: "true"
 
   # 2. Core Business Logic & DSA Engine (Spring Boot 3.3 / Java 21)
   - type: web

@@ -97,9 +97,17 @@ class EmbeddingEngine:
 
     def load_model(self):
         if self.model is None:
+            from app.config import settings
+            if settings.USE_LIGHTWEIGHT_EMBEDDINGS:
+                logger.info("USE_LIGHTWEIGHT_EMBEDDINGS=True: Using low-memory vector engine (<50MB RAM).")
+                self.model = "FALLBACK"
+                self._index_faqs_fallback()
+                return
+
             try:
+                import torch
+                torch.set_num_threads(1)
                 from sentence_transformers import SentenceTransformer
-                from app.config import settings
                 logger.info("Loading SentenceTransformer model: %s", settings.EMBEDDING_MODEL_NAME)
                 self.model = SentenceTransformer(settings.EMBEDDING_MODEL_NAME)
                 self._index_faqs()
@@ -115,15 +123,21 @@ class EmbeddingEngine:
             logger.info("Indexed %d FAQs into vector space.", len(self.faqs))
 
     def _index_faqs_fallback(self):
-        # Deterministic lightweight term frequency vectors for test and offline environments
+        # Deterministic lightweight term frequency vectors for low-memory environments
         self.faq_embeddings = [self._fallback_vector(f"{faq['question']} {faq['answer']}") for faq in self.faqs]
 
-    def _fallback_vector(self, text: str, dim: int = 128) -> np.ndarray:
+    def _fallback_vector(self, text: str, dim: int = 256) -> np.ndarray:
         vec = np.zeros(dim, dtype=np.float32)
-        words = text.lower().split()
+        words = text.lower().replace("-", " ").split()
         for w in words:
+            # Unigram hashing
             idx = abs(hash(w)) % dim
             vec[idx] += 1.0
+        # Bigram hashing for context preservation
+        for i in range(len(words) - 1):
+            bigram = f"{words[i]}_{words[i+1]}"
+            b_idx = abs(hash(bigram)) % dim
+            vec[b_idx] += 1.5
         norm = np.linalg.norm(vec)
         return vec / norm if norm > 0 else vec
 
